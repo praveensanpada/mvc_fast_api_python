@@ -1,0 +1,91 @@
+🔄 FULL DATA FLOW WITH 3 CONTROLLERS
+
+       +------------------+      +------------------+     +-----------------------+
+       |    MongoDB       |      |     MySQL        |     |   External API (3rd)  |
+       +--------+---------+      +--------+---------+     +-----------+-----------+
+                |                         |                           |
+                |                         |                           |
+                v                         v                           v
+   +-------------------+     +-------------------+     +------------------------+
+   | mongo_controller.py|     | mysql_controller.py|     |  api_controller.py     |
+   +-------------------+     +-------------------+     +------------------------+
+                |                         |                           |
+                v                         v                           v
+           +---------------------------------------------------------------+
+           |             processors/ (cleaner → normalizer → tagger)       |
+           +---------------------------------------------------------------+
+                                      |
+                                      v
+                   +---------------------------------------------+
+                   |           Exporter / API Layer              |
+                   | (file_exporter, api_exporter, data_registry)|
+                   +---------------------------------------------+
+                                      |
+                              +-------+--------+
+                              | Downstream:    |
+                              | Vector Store,  |
+                              | Chatbot, UI... |
+                              +----------------+
+
+🧱 MVC STRUCTURE OVERVIEW – cric_datahub/
+
+cric_datahub/
+├── main.py                            # 🚀 Entry point (FastAPI/Flask app)
+├── config/
+│   └── settings.py                    # 🔧 Global settings (DB URIs, API keys)
+│
+├── controllers/                       # 🎮 Responsible for orchestration
+│   ├── mongo_controller.py            # 🧠 Controls Mongo fetch → process → export
+│   ├── mysql_controller.py            # 🧠 Controls MySQL fetch → process → export
+│   └── api_controller.py              # 🧠 Controls 3rd-party fetch → process → export
+│
+├── models/                            # 🧬 Handles raw data fetching
+│   ├── mongo_model.py                 # 📦 Fetch from MongoDB via PyMongo
+│   ├── mysql_model.py                 # 📦 Fetch from MySQL via SQLAlchemy
+│   └── api_model.py                   # 📦 Fetch from third-party APIs (e.g., CricAPI)
+│
+├── routes/                            # 🌐 API Routes / Endpoints
+│   ├── mongo_routes.py                # 🔁 Endpoints for MongoDB-related data
+│   ├── mysql_routes.py                # 🔁 Endpoints for MySQL-related data
+│   └── api_routes.py                  # 🔁 Endpoints for 3rd-party API data
+│
+├── processors/                        # 🧹 Data transformation + enrichment
+│   ├── data_cleaner.py                # 🧽 Remove nulls, deduplicate, sanitize
+│   ├── data_normalizer.py             # 🔄 Lowercasing, standard units, key standardization
+│   └── metadata_tagger.py             # 🏷️ Add fields: match_id, player_id, etc.
+│
+├── schemas/
+│   └── match_schema.py                # ✅ Pydantic validation for match data
+│
+├── exporters/
+│   ├── file_exporter.py               # 📤 Export to JSON/Parquet (local/S3)
+│   ├── api_exporter.py                # 📡 REST API endpoints for downstream pull
+│   └── data_registry.py               # 🧾 Track export logs, timestamps, sources
+│
+├── utils/
+│   ├── logger.py                      # 📝 Logger with levels, colors, timestamps
+│   └── helpers.py                     # 🧰 Common utilities (e.g., hashing, flattening)
+│
+└── cron_jobs/
+    └── scheduled_sync.py              # ⏰ Scheduler to trigger the 3 controllers
+
+
+cricket_venv
+
+# 1. Create virtual environment
+python3 -m venv cricket_venv
+
+# 2. Activate it
+# On Linux/macOS:
+source cricket_venv/bin/activate
+
+# On Windows:
+cricket_venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the server
+python3 main.py
+
+http://localhost:8088/

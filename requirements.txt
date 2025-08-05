@@ -1,0 +1,6 @@
+fastapi==0.110.2
+uvicorn==0.29.0
+pymongo==4.6.3
+python-dotenv==1.0.1
+sqlalchemy==2.0.30
+pymysql==1.1.0
