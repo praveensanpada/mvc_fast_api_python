@@ -1,0 +1,61 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+.cricket_venv/
+cricket_venv/
+
+# VS Code settings
+.vscode/
+
+# Environment variable files
+.env
+.env.*
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Mac/Linux system files
+.DS_Store
+
+# Unit test cache
+.cache/
+.pytest_cache/
+
+# Uvicorn reload file
+reload.db
+
+# Pydantic/mypy/migration artifacts
+.mypy_cache/
+.dmypy.json
+.pyre/
+.idea/
+
+# Database dumps or temp
+*.sqlite3
+*.db
+*.sql
+*.bak
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Exported requirements files (editable)
+pip-wheel-metadata/
+
+# Docker/compose (if used)
+docker-compose.override.yml
+
+# Custom Docs Files
+rough.txt
